@@ -13,87 +13,111 @@ if os.path.exists(MODEL_PATH):
 else:
     model = None
 
-# Integrated HTML + Interactive CSS Animations
+# HTML Template with Cute & Animated CSS Layout
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVM Prediction Dashboard</title>
+    <title>✨ SVM Student Predictor ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0d1117;
-            --card-bg: rgba(22, 27, 34, 0.85);
-            --accent-glow: #6366f1;
-            --accent-hover: #4f46e5;
-            --text-main: #f0f6fc;
-            --text-muted: #8b949e;
-            --input-bg: #21262d;
-            --border-color: #30363d;
+            --bg-gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            --card-bg: rgba(255, 255, 255, 0.88);
+            --accent-pink: #ff758c;
+            --accent-purple: #a855f7;
+            --accent-hover: #ff7eb3;
+            --text-dark: #4a4a68;
+            --input-bg: #f8f9fe;
+            --border-soft: #e2e8f0;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Nunito', sans-serif;
         }
 
         body {
-            background: radial-gradient(circle at top left, #1e1b4b, var(--bg-color));
-            color: var(--text-main);
+            background: var(--bg-gradient);
+            background-size: 200% 200%;
+            animation: gradientShift 10s ease infinite;
+            color: var(--text-dark);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 30px 15px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
             background-color: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(16px);
+            border: 3px solid #ffffff;
+            padding: 35px;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(166, 193, 238, 0.5), 0 5px 15px rgba(255, 117, 140, 0.2);
             width: 100%;
-            max-width: 600px;
-            animation: fadeIn 0.8s ease-out;
+            max-width: 580px;
+            animation: floatIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
         }
 
-        @keyframes fadeIn {
-            from {
+        @keyframes floatIn {
+            0% {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(40px) scale(0.9);
             }
-            to {
+            100% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
+        }
+
+        /* Floating decoration badges */
+        .decoration {
+            position: absolute;
+            font-size: 24px;
+            animation: bounceSoft 3s ease-in-out infinite alternate;
+        }
+        .deco-1 { top: -15px; left: -15px; }
+        .deco-2 { top: -15px; right: -15px; animation-delay: 1.5s; }
+
+        @keyframes bounceSoft {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-10px) rotate(12deg); }
         }
 
         h2 {
+            font-family: 'Fredoka', sans-serif;
             text-align: center;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #a5b4fc, #6366f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #5b468a;
+            margin-bottom: 6px;
         }
 
         p.subtitle {
             text-align: center;
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 30px;
+            color: #8c7ba6;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 25px;
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 14px;
         }
 
         .form-group {
@@ -108,71 +132,83 @@ HTML_TEMPLATE = """
         label {
             margin-bottom: 6px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
+            font-weight: 800;
+            color: #6a539b;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         input, select {
             width: 100%;
-            padding: 12px;
+            padding: 12px 16px;
             background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
+            border: 2px solid var(--border-soft);
+            border-radius: 16px;
+            color: var(--text-dark);
             font-size: 15px;
+            font-weight: 700;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         input:focus, select:focus {
-            border-color: var(--accent-glow);
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+            border-color: var(--accent-pink);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(255, 117, 140, 0.2);
+            transform: scale(1.02);
         }
 
         button {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            padding: 15px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
             border: none;
-            border-radius: 8px;
+            border-radius: 20px;
             color: #ffffff;
-            font-size: 16px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 18px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            margin-top: 22px;
+            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.4);
+            position: relative;
+            overflow: hidden;
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 12px 25px rgba(255, 117, 140, 0.6);
         }
 
         button:active {
-            transform: translateY(0);
+            transform: translateY(1px) scale(0.98);
         }
 
+        /* Result Popup Card */
         .result-box {
             margin-top: 25px;
             padding: 18px;
-            border-radius: 8px;
+            border-radius: 18px;
             text-align: center;
+            font-family: 'Fredoka', sans-serif;
             font-weight: 700;
-            font-size: 20px;
-            background: rgba(99, 102, 241, 0.15);
-            border: 1px solid var(--accent-glow);
-            animation: pulseGlow 2s infinite alternate;
+            font-size: 22px;
+            color: #fff;
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            border: 2px solid #ffffff;
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+            animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes pulseGlow {
+        @keyframes popUp {
             0% {
-                box-shadow: 0 0 5px rgba(99, 102, 241, 0.2);
+                opacity: 0;
+                transform: scale(0.5);
             }
             100% {
-                box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+                opacity: 1;
+                transform: scale(1);
             }
         }
     </style>
@@ -180,13 +216,16 @@ HTML_TEMPLATE = """
 <body>
 
 <div class="container">
-    <h2>SVM Prediction Model</h2>
-    <p class="subtitle">Fill in the metrics below to generate a prediction</p>
+    <div class="decoration deco-1">🌸</div>
+    <div class="decoration deco-2">⭐</div>
+
+    <h2>✨ SVM Predictor ✨</h2>
+    <p class="subtitle">Fill in the details below to check prediction!</p>
     
     <form method="POST" action="/predict">
         <div class="grid">
             <div class="form-group">
-                <label for="gender">Gender</label>
+                <label for="gender">Gender 👤</label>
                 <select id="gender" name="gender" required>
                     <option value="1">Male</option>
                     <option value="0">Female</option>
@@ -194,27 +233,27 @@ HTML_TEMPLATE = """
             </div>
 
             <div class="form-group">
-                <label for="age">Age</label>
+                <label for="age">Age 🎂</label>
                 <input type="number" id="age" name="age" step="any" required placeholder="e.g. 20">
             </div>
 
             <div class="form-group">
-                <label for="study_hours">Study Hours / Wk</label>
+                <label for="study_hours">Study Hours 📚</label>
                 <input type="number" id="study_hours" name="study_hours_per_week" step="any" required placeholder="e.g. 15">
             </div>
 
             <div class="form-group">
-                <label for="attendance">Attendance Rate (%)</label>
-                <input type="number" id="attendance" name="attendance_rate" step="any" required placeholder="e.g. 85">
+                <label for="attendance">Attendance 🎒</label>
+                <input type="number" id="attendance" name="attendance_rate" step="any" required placeholder="e.g. 85%">
             </div>
 
             <div class="form-group">
-                <label for="parent_edu">Parent Education</label>
-                <input type="number" id="parent_edu" name="parent_education" step="any" required placeholder="Level scale (e.g. 1-5)">
+                <label for="parent_edu">Parent Edu 🎓</label>
+                <input type="number" id="parent_edu" name="parent_education" step="any" required placeholder="Scale 1-5">
             </div>
 
             <div class="form-group">
-                <label for="internet">Internet Access</label>
+                <label for="internet">Internet 🌐</label>
                 <select id="internet" name="internet_access" required>
                     <option value="1">Yes</option>
                     <option value="0">No</option>
@@ -222,7 +261,7 @@ HTML_TEMPLATE = """
             </div>
 
             <div class="form-group">
-                <label for="extracurricular">Extracurricular</label>
+                <label for="extracurricular">Activities 🎨</label>
                 <select id="extracurricular" name="extracurricular" required>
                     <option value="1">Yes</option>
                     <option value="0">No</option>
@@ -230,22 +269,22 @@ HTML_TEMPLATE = """
             </div>
 
             <div class="form-group">
-                <label for="prev_score">Previous Score</label>
+                <label for="prev_score">Prev Score 📝</label>
                 <input type="number" id="prev_score" name="previous_score" step="any" required placeholder="e.g. 75">
             </div>
 
             <div class="form-group full-width">
-                <label for="final_score">Final Score</label>
+                <label for="final_score">Final Score 🎯</label>
                 <input type="number" id="final_score" name="final_score" step="any" required placeholder="e.g. 80">
             </div>
         </div>
         
-        <button type="submit">Predict Outcome</button>
+        <button type="submit">Predict Result 🔮</button>
     </form>
 
     {% if prediction is not none %}
     <div class="result-box">
-        Prediction Result: {{ prediction }}
+        🎉 Prediction: {{ prediction }} 🎉
     </div>
     {% endif %}
 </div>
@@ -264,7 +303,6 @@ def predict():
         return render_template_string(HTML_TEMPLATE, prediction="Error: SVM_model.pkl not found.")
     
     try:
-        # Extract features from form in expected exact sequence
         features = [
             float(request.form.get('gender')),
             float(request.form.get('age')),
